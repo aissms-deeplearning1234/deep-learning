@@ -12,7 +12,7 @@ from get_data import get_data, read_params
 def train_and_test(config_file):
     config = get_data(config_file)
     root_dir = config['raw_data']['data_src']
-    dest = config['load_data']['preproseesd_data']
+    dest = config['load_data']['preprocessed_data']
    
     # Create destination directories if they don't exist
     os.makedirs(os.path.join(dest, 'train'), exist_ok=True)
