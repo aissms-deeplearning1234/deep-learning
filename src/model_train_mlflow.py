@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
-from keras_preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout
 from keras.models import Model
 from keras.applications.vgg16 import VGG16
@@ -26,7 +26,7 @@ def train_model_mlflow(config_file):
         shear_range = config['img_augment']['shear_range']
         zoom_range = config['img_augment']['zoom_range']
         horizontal_flip = config['img_augment']['horizontal_flip']
-        vertifal_flip = config['img_augment']['vertifal_flip']
+        vertifal_flip = config['img_augment']['vertical_flip']
         class_mode = config['img_augment']['class_mode']
         batch = config['img_augment']['batch_size']
         loss = config['model']['loss']
@@ -81,12 +81,14 @@ def train_model_mlflow(config_file):
                               validation_steps = len(test_set))
             train_loss = history.history['loss'][-1]
             val_loss = history.history['val_loss'][-1]
+            val_acc = history.history['val_accuracy'][-1]
 
             mlflow.log_param("epochs", epochs)
             mlflow.log_param("loss", loss)
             mlflow.log_param("val_loss", val_loss)
             #mlflow.log_param("val_accuracy", val_acc)
-            mlflow.log_param("metrics", metrics)
+            mlflow.log_param("metrics", val_acc)
+            mlflow.log_param("val_acc", val_acc)
 
             tracking_url_type_store = urlparse(mlflow.get_artifact_uri()).scheme
             if tracking_url_type_store != "file":
